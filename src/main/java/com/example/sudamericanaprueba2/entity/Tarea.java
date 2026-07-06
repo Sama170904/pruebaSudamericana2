@@ -1,11 +1,13 @@
 package com.example.sudamericanaprueba2.entity;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.security.core.GrantedAuthority;
@@ -56,12 +58,24 @@ public class Tarea {
         UI, UX, FEATURE, BUG, PERFORMANCE
     }
 
+
+    @Column(name = "fecha_creacion", updatable = false)
+    @CreationTimestamp // Magia de Hibernate: llena la fecha automáticamente al crearla
+    private LocalDateTime fechaCreacion;
+
+
+
     // mappedBy indica que Student es el dueño de la relación (el que crea la tabla intermedia)
-    @ManyToMany(mappedBy = "tareas")
-    @JsonIgnore // Evita el bucle infinito al convertir la respuesta a JSON
-    @ToString.Exclude // Bloquea el bucle del toString()
-    @EqualsAndHashCode.Exclude // Bloquea problemas de memoria al comparar
-    private Set<Usuario> usuarios = new HashSet<>();
+// Bloquea problemas de memoria al compara
+    @ManyToMany
+    @JoinTable(
+        name = "tbl_UsuarioVotosTarea", // Nombre de la tabla intermedia que Spring creará
+        joinColumns = @JoinColumn(name = "user_id"), // Columna que apunta a usuario
+        inverseJoinColumns = @JoinColumn(name = "tarea_id") // Columna que apunta a tarea
+    )
+    @ToString.Exclude // <--- Bloquea el bucle del toString()
+    @EqualsAndHashCode.Exclude // <--- Bloquea el bucle del EqualsandHashcode()
+    private Set<Usuario> usuariosVotantes = new HashSet<>();
 
     //comentarios
     @ToString.Exclude // Bloquea el bucle del toString()

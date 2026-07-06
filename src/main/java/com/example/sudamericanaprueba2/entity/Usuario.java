@@ -12,6 +12,8 @@ import org.hibernate.annotations.SQLRestriction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,7 +44,7 @@ public class Usuario implements UserDetails{
     private Rol rol;
 
     public enum Rol {
-        ACTIVO, INACTIVO, N
+        ADMINISTRADOR, PROGRAMADOR
     }
 
     @Column(name = "email", nullable = false, unique = true)
@@ -81,15 +83,11 @@ public class Usuario implements UserDetails{
         return true;
     }
 
-    @ManyToMany
-    @JoinTable(
-        name = "tbl_UsuarioVotosTarea", // Nombre de la tabla intermedia que Spring creará
-        joinColumns = @JoinColumn(name = "user_id"), // Columna que apunta a usuario
-        inverseJoinColumns = @JoinColumn(name = "tarea_id") // Columna que apunta a tarea
-    )
-    @ToString.Exclude // <--- Bloquea el bucle del toString()
-    @EqualsAndHashCode.Exclude // <--- Bloquea problemas de memoria al comparar
-    private Set<Tarea> tareas = new HashSet<>();
+    @ManyToMany(mappedBy = "usuariosVotantes")
+    @JsonIgnore // Evita el bucle infinito al convertir la respuesta a JSON
+    @ToString.Exclude // Bloquea el bucle del toString()
+    @EqualsAndHashCode.Exclude     
+    private Set<Tarea> tareasVotadas = new HashSet<>();
 
     @ToString.Exclude // Bloquea el bucle del toString()
     @EqualsAndHashCode.Exclude // Bloquea problemas de memoria al comparar
