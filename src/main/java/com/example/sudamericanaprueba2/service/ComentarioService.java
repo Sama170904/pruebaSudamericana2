@@ -43,9 +43,13 @@ public Comentario create(ComentarioDTO comentario) {
     return comentarioNuevo;
 }
 
-    public List<Comentario> getComentariosPorTarea(Tarea tarea) {
+    public List<Comentario> getComentariosPorTarea(Long tareaId) {
+        Tarea tarea = tareaRepository.findById(tareaId)
+            .orElseThrow(() -> new RuntimeException("tarea no encontrada con ID: " + tareaId));
         return comentarioRepository.findByTarea(tarea);
     }
+
+    
 
 
 }

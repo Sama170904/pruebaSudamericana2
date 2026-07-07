@@ -91,7 +91,9 @@ public class TareaService {
     }
 
     //contar votos por tarea
-    public int contarVotos(Tarea tarea){
+    public int contarVotos(Long tareaId){
+        Tarea tarea = tareaRepository.findById(tareaId)
+            .orElseThrow(() -> new RuntimeException("tarea no encontrada con ID: " + tareaId));
         int cantidadDeVotos = tarea.getUsuariosVotantes().size();
         return cantidadDeVotos;
     }

@@ -75,11 +75,13 @@ public class Tarea {
     )
     @ToString.Exclude // <--- Bloquea el bucle del toString()
     @EqualsAndHashCode.Exclude // <--- Bloquea el bucle del EqualsandHashcode()
+    @JsonIgnore
     private Set<Usuario> usuariosVotantes = new HashSet<>();
 
     //comentarios
     @ToString.Exclude // Bloquea el bucle del toString()
     @EqualsAndHashCode.Exclude // Bloquea problemas de memoria al comparar
     @OneToMany(mappedBy = "tarea", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Comentario> comentarios = new ArrayList<>();
 }

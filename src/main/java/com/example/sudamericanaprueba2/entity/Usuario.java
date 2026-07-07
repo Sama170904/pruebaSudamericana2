@@ -92,6 +92,7 @@ public class Usuario implements UserDetails{
     @ToString.Exclude // Bloquea el bucle del toString()
     @EqualsAndHashCode.Exclude // Bloquea problemas de memoria al comparar
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Comentario> comentarios = new ArrayList<>();
 
 }
