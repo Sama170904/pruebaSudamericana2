@@ -2,6 +2,7 @@ package com.example.sudamericanaprueba2.controller;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 public class TareaController {
 
     private final TareaService tareaService;
+    
     
     @GetMapping("/{tareaId}")
     public Tarea getTareaId(@PathVariable("tareaId") Long id) {
@@ -71,6 +73,7 @@ public class TareaController {
         return tareaService.quitarVoto(tareaId, usuarioId);
     }
 
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping
     public Tarea create(@RequestBody TareaDTO tarea) {
         return tareaService.create(tarea);

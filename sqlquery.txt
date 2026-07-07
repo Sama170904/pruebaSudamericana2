@@ -1,0 +1,27 @@
+USE sudamericanaprueba2;
+GO
+
+-- ==========================================
+-- 1. INSERTAR USUARIO ÚNICO
+-- Contraseña en texto plano: admin
+-- ==========================================
+INSERT INTO tbl_usuario (nombre, apellido, rol, email, password)
+VALUES 
+('Super', 'Admin', 'ADMINISTRADOR', 'admin@gmail.com', '$2a$10$Zks1iCtG4wV3KdBfAq6ER.zbBGHfOakpJaoBV4fCXoLta8Syltpdi');
+
+-- ==========================================
+-- 2. INSERTAR TAREAS BÁSICAS
+-- Solo un par de registros para probar los GET
+-- ==========================================
+INSERT INTO tbl_tarea (titulo, descripcion, estado, categoria, fecha_creacion)
+VALUES 
+('Configurar JWT', 'Asegurar que el token se genera correctamente tras el login', 'COMPLETED', 'FEATURE', GETDATE()),
+('Probar endpoints', 'Verificar que la base de datos devuelva los datos sin errores', 'INPROGRESS', 'BUG', GETDATE()),
+('Diseñar botones', 'Crear los botones principales del dashboard', 'OPEN', 'UI', GETDATE());
+
+GO
+
+INSERT INTO tbl_usuario (nombre, apellido, rol, email, password)
+VALUES 
+('Dev', 'Pruebas', 'PROGRAMADOR', 'programador@gmail.com', '$2a$10$Zks1iCtG4wV3KdBfAq6ER.zbBGHfOakpJaoBV4fCXoLta8Syltpdi');
+GO
