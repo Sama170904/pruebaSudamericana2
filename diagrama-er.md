@@ -46,3 +46,5 @@ erDiagram
         boolean expired
         bigint admin_id FK
     }
+
+    https://mermaid.ai/d/db600938-43f5-4031-bd32-612754fb74f2
