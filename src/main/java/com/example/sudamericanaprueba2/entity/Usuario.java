@@ -86,11 +86,11 @@ public class Usuario implements UserDetails{
         return true;
     }
 
-    @ManyToMany(mappedBy = "usuariosVotantes")
-    @JsonIgnore // Evita el bucle infinito al convertir la respuesta a JSON
     @ToString.Exclude // Bloquea el bucle del toString()
-    @EqualsAndHashCode.Exclude     
-    private Set<Tarea> tareasVotadas = new HashSet<>();
+    @EqualsAndHashCode.Exclude // Bloquea problemas de memoria al comparar
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Voto> votos = new ArrayList<>();
 
     @ToString.Exclude // Bloquea el bucle del toString()
     @EqualsAndHashCode.Exclude // Bloquea problemas de memoria al comparar

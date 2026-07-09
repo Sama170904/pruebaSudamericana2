@@ -11,10 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.sudamericanaprueba2.dto.ActualizarEstadoTareaDTO;
-import com.example.sudamericanaprueba2.dto.TareaDTO;
+import com.example.sudamericanaprueba2.dto.TareaCreateDTO;
+import com.example.sudamericanaprueba2.dto.VotoCreateDTO;
 import com.example.sudamericanaprueba2.entity.Comentario;
 import com.example.sudamericanaprueba2.entity.Tarea;
 import com.example.sudamericanaprueba2.entity.Usuario;
+import com.example.sudamericanaprueba2.entity.Voto;
 import com.example.sudamericanaprueba2.entity.Tarea.Categoria;
 import com.example.sudamericanaprueba2.entity.Tarea.Estado;
 import com.example.sudamericanaprueba2.repository.TareaRepository;
@@ -30,11 +32,10 @@ public class TareaService {
     private final UsuarioRepository usuarioRepository; 
     
     //Crear tarea
-    public Tarea create(TareaDTO tarea) {
+    public Tarea create(TareaCreateDTO tarea) {
         Tarea tareaNueva = Tarea.builder()
             .titulo(tarea.getTitulo().toUpperCase())
             .descripcion(tarea.getDescripcion())
-            .estado(tarea.getEstado())
             .categoria(tarea.getCategoria())
             .build();
         tareaRepository.save(tareaNueva);
@@ -66,42 +67,16 @@ public class TareaService {
         return TareaExistente;
     }
 
-    //asignar voto a una tarea
-    public Tarea asignarVoto(Long tareaId, Long usuarioId) {
-        Tarea tarea = tareaRepository.findById(tareaId)
-            .orElseThrow(() -> new RuntimeException("tarea no encontrada con ID: " + tareaId));
-
-        Usuario usuario = usuarioRepository.findById(usuarioId)
-            .orElseThrow(() -> new RuntimeException("usuario no encontrado con ID: " + tareaId));
-
-        tarea.getUsuariosVotantes().add(usuario);
-        return tareaRepository.save(tarea);
-    }
-
-    //quitar voto a una tarea
-    public Tarea quitarVoto(Long tareaId, Long usuarioId) {
-        Tarea tarea = tareaRepository.findById(tareaId)
-            .orElseThrow(() -> new RuntimeException("tarea no encontrada con ID: " + tareaId));
-
-        Usuario usuario = usuarioRepository.findById(usuarioId)
-            .orElseThrow(() -> new RuntimeException("usuario no encontrado con ID: " + tareaId));
-
-        tarea.getUsuariosVotantes().remove(usuario);
-        return tareaRepository.save(tarea);
-    }
-
-    //contar votos por tarea
-    public int contarVotos(Long tareaId){
-        Tarea tarea = tareaRepository.findById(tareaId)
-            .orElseThrow(() -> new RuntimeException("tarea no encontrada con ID: " + tareaId));
-        int cantidadDeVotos = tarea.getUsuariosVotantes().size();
-        return cantidadDeVotos;
-    }
-
     //contar tareas por categoria
     public int contarPorCategoria(Categoria categoria){
         int NumeroTareasPorCategoria = this.getTareaPorCategoria(categoria).size();
         return NumeroTareasPorCategoria;
+    }
+
+    //contar tareas por estado
+    public int contarPorEstado(Estado estado){
+        int NumeroTareasPorEstado = this.getTareaPorEstado(estado).size();
+        return NumeroTareasPorEstado;
     }
 
     

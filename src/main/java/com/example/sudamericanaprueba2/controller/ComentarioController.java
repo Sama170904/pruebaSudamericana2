@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.sudamericanaprueba2.dto.ComentarioDTO;
+import com.example.sudamericanaprueba2.dto.ComentarioCreateDTO;
 import com.example.sudamericanaprueba2.entity.Comentario;
 import com.example.sudamericanaprueba2.repository.ComentarioRepository;
 import com.example.sudamericanaprueba2.repository.TareaRepository;
@@ -28,7 +28,7 @@ public class ComentarioController {
     private final ComentarioService comentarioService; 
 
     @PostMapping
-    public Comentario create(@RequestBody ComentarioDTO comentario) {
+    public Comentario create(@RequestBody ComentarioCreateDTO comentario) {
         return comentarioService.create(comentario);
     }
 

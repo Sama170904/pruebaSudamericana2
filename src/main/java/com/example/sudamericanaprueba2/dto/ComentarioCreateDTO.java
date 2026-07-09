@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor // me dio un error el swagger por falta de cosntructor en el dto y tuve que poenr esto 
 @AllArgsConstructor
-public class ComentarioDTO {
+public class ComentarioCreateDTO {
 
     @NotBlank(message="No puede comentar en blanco")
     private String comentario;

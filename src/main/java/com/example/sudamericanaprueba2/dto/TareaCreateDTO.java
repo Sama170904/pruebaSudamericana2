@@ -16,7 +16,7 @@ import jakarta.validation.constraints.*;
 @Builder
 @NoArgsConstructor // me dio un error el swagger por falta de cosntructor en el dto y tuve que poenr esto 
 @AllArgsConstructor
-public class TareaDTO {
+public class TareaCreateDTO {
 
 
     @NotBlank(message="Debe ingresar un titulo") 
@@ -26,9 +26,6 @@ public class TareaDTO {
     @NotBlank(message="Debe ingresar una descripcion")
     private String descripcion;
 
-
-    @NotNull(message="Debe ingresar un estado")
-    private Estado estado;
 
     @NotNull(message="Debe ingresar una categoria")
     private Categoria categoria;

@@ -42,9 +42,9 @@ public class Tarea {
     @Column
     private String descripcion;
 
-    @Column
+    @Column(columnDefinition = "VARCHAR(20) DEFAULT 'OPEN'")
     @Enumerated(EnumType.STRING) 
-    private Estado estado;
+    private Estado estado = Estado.OPEN;
 
     public enum Estado {
         OPEN, INPROGRESS, COMPLETED
@@ -65,18 +65,12 @@ public class Tarea {
 
 
 
-    // mappedBy indica que Student es el dueño de la relación (el que crea la tabla intermedia)
-// Bloquea problemas de memoria al compara
-    @ManyToMany
-    @JoinTable(
-        name = "tbl_UsuarioVotosTarea", // Nombre de la tabla intermedia que Spring creará
-        joinColumns = @JoinColumn(name = "user_id"), // Columna que apunta a usuario
-        inverseJoinColumns = @JoinColumn(name = "tarea_id") // Columna que apunta a tarea
-    )
-    @ToString.Exclude // <--- Bloquea el bucle del toString()
-    @EqualsAndHashCode.Exclude // <--- Bloquea el bucle del EqualsandHashcode()
+    //votos
+    @ToString.Exclude // Bloquea el bucle del toString()
+    @EqualsAndHashCode.Exclude // Bloquea problemas de memoria al comparar
+    @OneToMany(mappedBy = "tarea", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private Set<Usuario> usuariosVotantes = new HashSet<>();
+    private List<Voto> votos = new ArrayList<>();
 
     //comentarios
     @ToString.Exclude // Bloquea el bucle del toString()

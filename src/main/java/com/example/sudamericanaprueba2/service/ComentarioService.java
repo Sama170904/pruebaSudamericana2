@@ -5,8 +5,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.example.sudamericanaprueba2.dto.ComentarioDTO;
-import com.example.sudamericanaprueba2.dto.TareaDTO;
+import com.example.sudamericanaprueba2.dto.ComentarioCreateDTO;
+import com.example.sudamericanaprueba2.dto.TareaCreateDTO;
 import com.example.sudamericanaprueba2.entity.Comentario;
 import com.example.sudamericanaprueba2.entity.Tarea;
 import com.example.sudamericanaprueba2.entity.Usuario;
@@ -25,7 +25,7 @@ public class ComentarioService {
     private final UsuarioRepository usuarioRepository;    
     private final TareaRepository tareaRepository; 
     
-public Comentario create(ComentarioDTO comentario) {
+public Comentario create(ComentarioCreateDTO comentario) {
     
     Tarea tareaObjeto = tareaRepository.findById(comentario.getTarea())
         .orElseThrow(() -> new RuntimeException("La tarea no existe"));

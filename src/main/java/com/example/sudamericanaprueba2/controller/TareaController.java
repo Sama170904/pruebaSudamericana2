@@ -14,13 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody; 
 
 import com.example.sudamericanaprueba2.dto.ActualizarEstadoTareaDTO;
-import com.example.sudamericanaprueba2.dto.TareaDTO;
+import com.example.sudamericanaprueba2.dto.TareaCreateDTO;
 import com.example.sudamericanaprueba2.entity.Tarea;
 import com.example.sudamericanaprueba2.entity.Tarea.Categoria;
 import com.example.sudamericanaprueba2.entity.Tarea.Estado;
 import com.example.sudamericanaprueba2.service.AuthService;
 import com.example.sudamericanaprueba2.service.TareaService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -52,8 +53,8 @@ public class TareaController {
     }
 
     @GetMapping("/categoria/{categoria}/count")
-    public int contarPorCategoria(@PathVariable("categoria") Categoria categoria) {
-        return tareaService.contarPorCategoria(categoria); 
+    public int contarPorEstado(@PathVariable("estado") Estado estado) {
+        return tareaService.contarPorEstado(estado); 
     }
 
     @PutMapping
@@ -75,7 +76,7 @@ public class TareaController {
 
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping
-    public Tarea create(@RequestBody TareaDTO tarea) {
+    public Tarea create(@RequestBody @Valid TareaCreateDTO tarea) {
         return tareaService.create(tarea);
     }
 }
