@@ -14,5 +14,7 @@ import com.example.sudamericanaprueba2.entity.Voto;
 @Repository
 public interface VotoRepository extends JpaRepository<Voto, Long> {
     Optional<Voto> findByTarea_TareaIdAndUsuario_UserId(Long tareaId, Long userId);
-    Boolean exitsByTarea_TareaIdAndUsuario_UserId(Long tareaId, Long usuarioId);
+    Boolean existsByTarea_TareaIdAndUsuario_UserId(Long tareaId, Long usuarioId);
+    List<Voto> findByTarea_TareaId(Long tareaId);
+    void deleteByTarea_TareaIdAndUsuario_UserId(Long tareaId, Long usuarioId);
 }

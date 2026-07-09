@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor  //no me corria swagger por eso las agregue
 @Entity
 @Table(name = "tbl_voto")
-@SQLDelete(sql = "UPDATE tbl_voto SET estado = 'INACTIVO' WHERE usuario_id = ? and tarea_id =?") //cuando se elimina se hace un update 
+@SQLDelete(sql = "UPDATE tbl_voto SET estado = 'INACTIVO' WHERE voto_id = ?")
 @SQLRestriction("estado = 'ACTIVO'") 
 public class Voto {
     

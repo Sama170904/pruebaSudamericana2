@@ -1,4 +1,4 @@
-package com.example.sudamericanaprueba2.dto;
+package com.example.sudamericanaprueba2.dto.Create;
 
 import com.example.sudamericanaprueba2.entity.Tarea.Categoria;
 import com.example.sudamericanaprueba2.entity.Tarea.Estado;
@@ -26,8 +26,8 @@ public class TareaCreateDTO {
     @NotBlank(message="Debe ingresar una descripcion")
     private String descripcion;
 
-
+    @Pattern(regexp = "^(PERFORMANCE|UX|UI|FEATURE|BUG)$", message = "La categoría debe ser PERFORMANCE, UX, UI, FEATURE o BUG")
     @NotNull(message="Debe ingresar una categoria")
-    private Categoria categoria;
+    private String categoria;
 
 }

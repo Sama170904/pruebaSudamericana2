@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.sudamericanaprueba2.dto.LoginRequestDTO;
-import com.example.sudamericanaprueba2.dto.TokenResponseDTO;
+import com.example.sudamericanaprueba2.dto.Response.TokenResponseDTO;
 import com.example.sudamericanaprueba2.service.AuthService;
 
 @RestController

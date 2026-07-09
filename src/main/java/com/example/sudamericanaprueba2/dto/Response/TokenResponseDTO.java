@@ -1,4 +1,4 @@
-package com.example.sudamericanaprueba2.dto;
+package com.example.sudamericanaprueba2.dto.Response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

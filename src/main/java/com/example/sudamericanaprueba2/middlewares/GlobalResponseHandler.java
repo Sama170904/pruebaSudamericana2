@@ -8,7 +8,7 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-import com.example.sudamericanaprueba2.dto.ApiResponseDTO;
+import com.example.sudamericanaprueba2.dto.Response.ApiResponseDTO;
 
 import java.time.LocalDateTime;
 

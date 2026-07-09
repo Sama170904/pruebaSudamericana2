@@ -1,4 +1,4 @@
-package com.example.sudamericanaprueba2.dto;
+package com.example.sudamericanaprueba2.dto.Create;
 
 import com.example.sudamericanaprueba2.entity.Tarea.Estado;
 

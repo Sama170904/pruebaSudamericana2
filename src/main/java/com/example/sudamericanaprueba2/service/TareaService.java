@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.sudamericanaprueba2.dto.ActualizarEstadoTareaDTO;
-import com.example.sudamericanaprueba2.dto.TareaCreateDTO;
-import com.example.sudamericanaprueba2.dto.VotoCreateDTO;
+import com.example.sudamericanaprueba2.dto.Create.ActualizarEstadoTareaDTO;
+import com.example.sudamericanaprueba2.dto.Create.TareaCreateDTO;
+import com.example.sudamericanaprueba2.dto.Create.VotoCreateDTO;
 import com.example.sudamericanaprueba2.entity.Comentario;
 import com.example.sudamericanaprueba2.entity.Tarea;
 import com.example.sudamericanaprueba2.entity.Usuario;
@@ -34,9 +34,10 @@ public class TareaService {
     //Crear tarea
     public Tarea create(TareaCreateDTO tarea) {
         Tarea tareaNueva = Tarea.builder()
-            .titulo(tarea.getTitulo().toUpperCase())
-            .descripcion(tarea.getDescripcion())
-            .categoria(tarea.getCategoria())
+            .titulo(tarea.getTitulo().trim())
+            .descripcion(tarea.getDescripcion().trim())
+            //Convertimos el String del DTO al Enum de la Entidad
+            .categoria(Tarea.Categoria.valueOf(tarea.getCategoria()))
             .build();
         tareaRepository.save(tareaNueva);
         return tareaNueva;

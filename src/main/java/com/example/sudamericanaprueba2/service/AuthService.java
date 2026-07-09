@@ -8,7 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service;
 
 import com.example.sudamericanaprueba2.dto.LoginRequestDTO;
-import com.example.sudamericanaprueba2.dto.TokenResponseDTO;
+import com.example.sudamericanaprueba2.dto.Response.TokenResponseDTO;
 import com.example.sudamericanaprueba2.entity.Usuario;
 import com.example.sudamericanaprueba2.repository.TokenRepository;
 import com.example.sudamericanaprueba2.repository.UsuarioRepository;

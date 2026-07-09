@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 // ¡IMPORTACIÓN CORREGIDA! 
-import org.springframework.web.bind.annotation.RequestBody; 
+import org.springframework.web.bind.annotation.RequestBody;
 
-import com.example.sudamericanaprueba2.dto.ActualizarEstadoTareaDTO;
-import com.example.sudamericanaprueba2.dto.TareaCreateDTO;
+import com.example.sudamericanaprueba2.dto.Create.ActualizarEstadoTareaDTO;
+import com.example.sudamericanaprueba2.dto.Create.TareaCreateDTO;
 import com.example.sudamericanaprueba2.entity.Tarea;
 import com.example.sudamericanaprueba2.entity.Tarea.Categoria;
 import com.example.sudamericanaprueba2.entity.Tarea.Estado;
@@ -22,6 +22,7 @@ import com.example.sudamericanaprueba2.service.AuthService;
 import com.example.sudamericanaprueba2.service.TareaService;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -33,7 +34,7 @@ public class TareaController {
     
     
     @GetMapping("/{tareaId}")
-    public Tarea getTareaId(@PathVariable("tareaId") Long id) {
+    public Tarea getTareaId(@PathVariable("tareaId") @Min(value = 1, message = "El ID debe ser mayor a 0") Long id) {
         return tareaService.getTareaId(id); 
     }
 
@@ -47,12 +48,9 @@ public class TareaController {
         return tareaService.getTareaPorEstado(estado); 
     }
 
-    @GetMapping("/{tareaId}/votos/count")
-    public int contarVotos(@PathVariable("tareaId") Long id) {
-        return tareaService.contarVotos(id); 
-    }
 
-    @GetMapping("/categoria/{categoria}/count")
+
+    @GetMapping("/categoria/{estado}/count")
     public int contarPorEstado(@PathVariable("estado") Estado estado) {
         return tareaService.contarPorEstado(estado); 
     }
@@ -62,17 +60,7 @@ public class TareaController {
         return tareaService.cambiarEstadoTarea(tarea);
     }
 
-    @PostMapping("/{tareaId}/usuarios/{usuarioId}/votar")
-    public Tarea votar(@PathVariable("tareaId") Long tareaId, 
-                                @PathVariable("usuarioId") Long usuarioId) {
-        return tareaService.asignarVoto(tareaId, usuarioId);
-    }
 
-    @PostMapping("/{tareaId}/usuarios/{usuarioId}/quitarVoto")
-    public Tarea quitarVoto(@PathVariable("tareaId") Long tareaId, 
-                                @PathVariable("usuarioId") Long usuarioId) {
-        return tareaService.quitarVoto(tareaId, usuarioId);
-    }
 
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping

@@ -1,4 +1,4 @@
-package com.example.sudamericanaprueba2.dto;
+package com.example.sudamericanaprueba2.dto.Create;
 
 import com.example.sudamericanaprueba2.entity.Tarea;
 import com.example.sudamericanaprueba2.entity.Usuario;
@@ -25,9 +25,11 @@ public class ComentarioCreateDTO {
     @NotBlank(message="No puede comentar en blanco")
     private String comentario;
 
+    @Min(value = 1, message = "El ID debe ser mayor a 0")
     @NotNull(message="No un id de tarea asignado")
     private Long tarea;
 
+    @Min(value = 1, message = "El ID debe ser mayor a 0")
     @NotNull(message="No hay un id de usuario asignado")
     private Long usuario;
 }
