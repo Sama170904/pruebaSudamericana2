@@ -29,14 +29,14 @@ Este proyecto implementa un backend con:
 ## Estructura del proyecto
 
 - src/main/java/com/example/sudamericanaprueba2
-  - config/: configuración de seguridad, autenticación y OpenAPI.
-  - controller/: controladores REST para auth, tareas, comentarios y votos.
-  - dto/: DTOs para solicitudes y respuestas.
-  - entity/: entidades JPA.
-  - filter/: filtro JWT.
-  - middlewares/: manejo global de excepciones y respuestas.
-  - repository/: repositorios Spring Data JPA.
-  - service/: lógica de negocio.
+    - config/: configuración de seguridad, autenticación y OpenAPI.
+    - controller/: controladores REST para auth, tareas, comentarios y votos.
+    - dto/: DTOs para solicitudes y respuestas.
+    - entity/: entidades JPA.
+    - filter/: filtro JWT.
+    - middlewares/: manejo global de excepciones y respuestas.
+    - repository/: repositorios Spring Data JPA.
+    - service/: lógica de negocio.
 - src/main/resources/application.properties: configuración principal de la aplicación.
 
 ## Requisitos previos
@@ -94,35 +94,144 @@ Una vez iniciada, la aplicación estará disponible en:
 ### Autenticación
 
 - POST /api/v1/auth/login
-  - Inicia sesión y devuelve tokens JWT.
-  - Body esperado:
+    - Inicia sesión y devuelve tokens JWT.
+    - Body esperado (LoginRequestDTO):
 
 ```json
 {
-  "email": "usuario@example.com",
-  "password": "password"
+    "email": "usuario@example.com",
+    "password": "password"
 }
 ```
+
+- Respuesta (TokenResponseDTO):
+
+```json
+{
+    "access_token": "<jwt-access-token>",
+    "refresh_token": "<jwt-refresh-token>"
+}
+```
+
+> Importante: el backend espera la ruta exacta `/api/v1/auth/login` y devuelve los campos `access_token` y `refresh_token`. Si el frontend usa otra ruta o espera un campo `token`, la autenticación no funcionará correctamente.
 
 ### Tareas
 
 - GET /api/v1/tarea/{tareaId}
+    - Obtiene una tarea por su ID.
 - GET /api/v1/tarea/categoria/{categoria}
+    - Lista tareas filtradas por categoría.
 - GET /api/v1/tarea/estado/{estado}
+    - Lista tareas filtradas por estado.
 - GET /api/v1/tarea/categoria/{estado}/count
+    - Cuenta tareas por estado.
 - PUT /api/v1/tarea
+    - Actualiza el estado de una tarea usando ActualizarEstadoTareaDTO.
+    - Body esperado:
+
+```json
+{
+    "tareaId": 1,
+    "estado": "EN_PROCESO"
+}
+```
+
 - POST /api/v1/tarea
+    - Crea una nueva tarea (requiere rol ADMINISTRADOR).
+    - Body esperado (TareaCreateDTO):
+
+```json
+{
+    "titulo": "Nueva tarea",
+    "descripcion": "Descripción de la tarea",
+    "categoria": "FEATURE"
+}
+```
 
 ### Comentarios
 
 - POST /api/v1/comentario
+    - Crea un comentario para una tarea.
+    - Body esperado (ComentarioCreateDTO):
+
+```json
+{
+    "comentario": "Texto del comentario",
+    "tarea": 1,
+    "usuario": 2
+}
+```
+
 - GET /api/v1/comentario/{tareaId}
+    - Obtiene los comentarios asociados a una tarea.
 
 ### Votos
 
 - GET /api/v1/voto/{tareaId}/votos/count
+    - Cuenta los votos de una tarea.
 - POST /api/v1/voto
+    - Crea un voto para una tarea.
+    - Body esperado (VotoCreateDTO):
+
+```json
+{
+    "idUsuario": 2,
+    "idTarea": 1
+}
+```
+
 - DELETE /api/v1/voto/{tareaId}/usuario/{usuarioId}
+    - Elimina el voto de un usuario para una tarea.
+
+## DTOs principales
+
+- LoginRequestDTO
+    - email: String, obligatorio y con formato válido.
+    - password: String, obligatorio.
+- TokenResponseDTO
+    - access_token: String.
+    - refresh_token: String.
+- TareaCreateDTO
+    - titulo: String, obligatorio.
+    - descripcion: String, obligatorio.
+    - categoria: String, obligatorio. Valores válidos: PERFORMANCE, UX, UI, FEATURE, BUG.
+- ActualizarEstadoTareaDTO
+    - tareaId: Long, obligatorio.
+    - estado: Enum Estado, obligatorio.
+- ComentarioCreateDTO
+    - comentario: String, obligatorio.
+    - tarea: Long, ID de tarea, obligatorio.
+    - usuario: Long, ID de usuario, obligatorio.
+- VotoCreateDTO
+    - idUsuario: Long, obligatorio.
+    - idTarea: Long, obligatorio.
+
+## Cómo se construye el JWT
+
+El servicio `JwtService` crea dos tipos de tokens:
+
+- access token: expiración configurada en `jwt.expiration`.
+- refresh token: expiración configurada en `jwt.refresh.expiration`.
+
+El token se arma con `Jwts.builder()` y contiene:
+
+- `sub` (subject): el username del usuario, que en este proyecto corresponde al email.
+- `iat` (issued at): fecha de emisión.
+- `exp` (expiration): fecha de expiración.
+- `roles`: lista de roles del usuario. Actualmente el valor puede ser `ROLE_ADMINISTRADOR` o `ROLE_PROGRAMADOR`.
+
+El JWT se firma con la clave secreta `jwt.secret`, que se decodifica desde Base64 y se usa como HMAC SHA-256.
+
+### Validación del JWT
+
+Para validar un token, el servicio:
+
+1. Decodifica el JWT con la misma clave secreta.
+2. Extrae el username del claim `sub`.
+3. Compara el username extraído con el `UserDetails` actual.
+4. Verifica que la fecha de expiración no haya pasado.
+
+Esto significa que, en el cuerpo del JWT, la información del usuario es mínima y está centrada en el identificador principal (`subject`) y los roles, sin incluir datos sensibles como la contraseña.
 
 ## Seguridad
 
@@ -136,36 +245,34 @@ Una vez iniciada, la aplicación estará disponible en:
 ### Entidades
 
 - Usuario
-  - userId
-  - nombre
-  - apellido
-  - email
-  - password
-  - rol
+    - userId
+    - nombre
+    - apellido
+    - email
+    - password
+    - rol
 
 - Tarea
-  - tareaId
-  - titulo
-  - descripcion
-  - estado
-  - categoria
-  - fechaCreacion
+    - tareaId
+    - titulo
+    - descripcion
+    - estado
+    - categoria
+    - fechaCreacion
 
 - Comentario
-  - comentarioId
-  - comentario
-  - tarea
-  - usuario
+    - comentarioId
+    - comentario
+    - tarea
+    - usuario
 
 - Voto
-  - id
-  - tarea
-  - usuario
+    - id
+    - tarea
+    - usuario
 
 ## Observaciones
 
 - El proyecto usa actualización automática del esquema con spring.jpa.hibernate.ddl-auto=update, útil para desarrollo.
 - La documentación está disponible en Swagger y puede usarse como referencia rápida para probar los endpoints.
 - Si se necesita una versión más robusta para producción, conviene separar secretos, mejorar manejo de errores y añadir pruebas automatizadas.
-
-

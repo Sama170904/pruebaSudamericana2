@@ -31,36 +31,31 @@ import lombok.RequiredArgsConstructor;
 public class TareaController {
 
     private final TareaService tareaService;
-    
-    
+
     @GetMapping("/{tareaId}")
     public Tarea getTareaId(@PathVariable("tareaId") @Min(value = 1, message = "El ID debe ser mayor a 0") Long id) {
-        return tareaService.getTareaId(id); 
+        return tareaService.getTareaId(id);
     }
 
     @GetMapping("/categoria/{categoria}")
     public List<Tarea> getTareaPorCategoria(@PathVariable("categoria") Categoria categoria) {
-        return tareaService.getTareaPorCategoria(categoria); 
+        return tareaService.getTareaPorCategoria(categoria);
     }
 
     @GetMapping("/estado/{estado}")
     public List<Tarea> getTareaPorEstado(@PathVariable("estado") Estado estado) {
-        return tareaService.getTareaPorEstado(estado); 
+        return tareaService.getTareaPorEstado(estado);
     }
-
-
 
     @GetMapping("/categoria/{estado}/count")
     public int contarPorEstado(@PathVariable("estado") Estado estado) {
-        return tareaService.contarPorEstado(estado); 
+        return tareaService.contarPorEstado(estado);
     }
 
     @PutMapping
     public Tarea actualizarEstado(@RequestBody ActualizarEstadoTareaDTO tarea) {
         return tareaService.cambiarEstadoTarea(tarea);
     }
-
-
 
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping

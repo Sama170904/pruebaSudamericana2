@@ -5,12 +5,14 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -26,22 +28,20 @@ public class JwtService {
     @Value("${jwt.refresh.expiration}")
     private long refreshExpiration;
 
-
-    //LECTURA DEL TOKEN
-    //extrae el username del usuario de la codificacion del jwt
+    // LECTURA DEL TOKEN
+    // extrae el username del usuario de la codificacion del jwt
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    //extrae el claim(datos sobre el usuario) de la codificacion del jwt
+    // extrae el claim(datos sobre el usuario) de la codificacion del jwt
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    
     public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+        return generateToken(getExtraClaims(userDetails), userDetails);
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
@@ -49,23 +49,30 @@ public class JwtService {
     }
 
     public String generateRefreshToken(UserDetails userDetails) {
-        return buildToken(new HashMap<>(), userDetails, refreshExpiration);
+        return buildToken(getExtraClaims(userDetails), userDetails, refreshExpiration);
     }
 
-
-    //FABRICACION DEL TOKEN
+    // FABRICACION DEL TOKEN
     private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
         return Jwts.builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getSignInKey()) 
+                .signWith(getSignInKey())
                 .compact();
     }
 
+    private Map<String, Object> getExtraClaims(UserDetails userDetails) {
+        Map<String, Object> extraClaims = new HashMap<>();
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+        extraClaims.put("roles", roles);
+        return extraClaims;
+    }
 
-    //VALIDACION DEL TOKEN
+    // VALIDACION DEL TOKEN
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
@@ -79,14 +86,13 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
-
-    //ENCRIPTACION Y CRIPTOGRAFIA
+    // ENCRIPTACION Y CRIPTOGRAFIA
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder() 
-                .setSigningKey(getSignInKey()) 
+        return Jwts.parserBuilder()
+                .setSigningKey(getSignInKey())
                 .build()
-                .parseClaimsJws(token)  
-                .getBody(); 
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     private SecretKey getSignInKey() {
