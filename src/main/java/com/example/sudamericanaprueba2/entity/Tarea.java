@@ -26,8 +26,8 @@ import lombok.ToString;
 
 @Builder
 @Data
-@AllArgsConstructor //no me corria swagger por eso las agregue
-@NoArgsConstructor  //no me corria swagger por eso las agregue
+@AllArgsConstructor // no me corria swagger por eso las agregue
+@NoArgsConstructor // no me corria swagger por eso las agregue
 @Entity
 @Table(name = "tbl_tarea")
 public class Tarea {
@@ -42,8 +42,9 @@ public class Tarea {
     @Column
     private String descripcion;
 
+    @Builder.Default
     @Column(columnDefinition = "VARCHAR(20) DEFAULT 'OPEN'")
-    @Enumerated(EnumType.STRING) 
+    @Enumerated(EnumType.STRING)
     private Estado estado = Estado.OPEN;
 
     public enum Estado {
@@ -51,28 +52,25 @@ public class Tarea {
     }
 
     @Column
-    @Enumerated(EnumType.STRING) 
+    @Enumerated(EnumType.STRING)
     private Categoria categoria;
 
     public enum Categoria {
         UI, UX, FEATURE, BUG, PERFORMANCE
     }
 
-
     @Column(name = "fecha_creacion", updatable = false)
     @CreationTimestamp // Magia de Hibernate: llena la fecha automáticamente al crearla
     private LocalDateTime fechaCreacion;
 
-
-
-    //votos
+    // votos
     @ToString.Exclude // Bloquea el bucle del toString()
     @EqualsAndHashCode.Exclude // Bloquea problemas de memoria al comparar
     @OneToMany(mappedBy = "tarea", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Voto> votos = new ArrayList<>();
 
-    //comentarios
+    // comentarios
     @ToString.Exclude // Bloquea el bucle del toString()
     @EqualsAndHashCode.Exclude // Bloquea problemas de memoria al comparar
     @OneToMany(mappedBy = "tarea", cascade = CascadeType.ALL, orphanRemoval = true)
