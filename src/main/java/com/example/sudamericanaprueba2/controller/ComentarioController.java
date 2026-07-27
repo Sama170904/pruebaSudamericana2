@@ -3,6 +3,7 @@ package com.example.sudamericanaprueba2.controller;
 import java.util.List;
 
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,22 +25,29 @@ import jakarta.validation.constraints.Min;
 import org.springframework.web.bind.annotation.RequestBody;
 import lombok.RequiredArgsConstructor;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(path = "/api/v1/comentario")
 public class ComentarioController {
-    
-    private final ComentarioService comentarioService; 
+
+    private final ComentarioService comentarioService;
 
     @PostMapping
     public ComentarioResponseDTO create(@RequestBody @Valid ComentarioCreateDTO comentario) {
         return comentarioService.create(comentario);
     }
 
-
     @GetMapping("/{tareaId}")
-    public List<ComentarioResponseDTO> comentarioPorTarea(@PathVariable("tareaId") @Min(value = 1, message = "El ID debe ser mayor a 0") Long id) {
-        return comentarioService.getComentariosPorTarea(id); 
+    public List<ComentarioResponseDTO> comentarioPorTarea(
+            @PathVariable("tareaId") @Min(value = 1, message = "El ID debe ser mayor a 0") Long id) {
+        return comentarioService.getComentariosPorTarea(id);
+    }
+
+    @GetMapping("/count/{tareaId}")
+    public int contarComentarios(
+            @PathVariable("tareaId") @Min(value = 1, message = "El ID debe ser mayor a 0") Long id) {
+        return comentarioService.contarComentarios(id);
     }
 
 }

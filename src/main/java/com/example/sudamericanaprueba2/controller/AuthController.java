@@ -4,6 +4,7 @@ package com.example.sudamericanaprueba2.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import com.example.sudamericanaprueba2.dto.LoginRequestDTO;
 import com.example.sudamericanaprueba2.dto.Response.TokenResponseDTO;
 import com.example.sudamericanaprueba2.service.AuthService;
 
+@CrossOrigin(origins = "http://localhost:5173") 
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
