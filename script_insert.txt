@@ -1,0 +1,68 @@
+-- =========================================================
+-- SCRIPT DE INSERCIÓN DE DATOS DE PRUEBA DE RED DE CARGA EV
+-- Base de Datos: sudamericanaprueba5
+-- =========================================================
+
+USE sudamericanaprueba5;
+GO
+
+SET ANSI_NULLS ON;
+SET QUOTED_IDENTIFIER ON;
+GO
+
+-- 1. LIMPIEZA PREVIA DE TABLAS
+DELETE FROM tbl_sesion;
+DELETE FROM estacion_conector;
+DELETE FROM tbl_conector;
+DELETE FROM tbl_estacion;
+DELETE FROM tbl_usuario;
+GO
+
+-- 2. INSERCIÓN DE USUARIOS CON ROLES (Misma contraseña encriptada)
+INSERT INTO tbl_usuario (nombre, apellido, rol, email, password)
+VALUES 
+(N'Super', N'Admin', N'ADMINISTRADOR', N'admin@gmail.com', N'$2a$10$Zks1iCtG4wV3KdBfAq6ER.zbBGHfOakpJaoBV4fCXoLta8Syltpdi'),
+(N'Carlos', N'Operador', N'OPERADOR', N'operador@gmail.com', N'$2a$10$Zks1iCtG4wV3KdBfAq6ER.zbBGHfOakpJaoBV4fCXoLta8Syltpdi'),
+(N'Juan', N'Pérez', N'USUARIO', N'juan@gmail.com', N'$2a$10$Zks1iCtG4wV3KdBfAq6ER.zbBGHfOakpJaoBV4fCXoLta8Syltpdi');
+GO
+
+-- 3. INSERCIÓN DE ESTACIONES DE CARGA
+INSERT INTO tbl_estacion (nombre, estado)
+VALUES 
+(N'Estación Centro Guayaquil', N'ACTIVO'),
+(N'Estación Samborondón', N'ACTIVO'),
+(N'Estación Norte Quito', N'ACTIVO');
+GO
+
+-- 4. INSERCIÓN DE CONECTORES CON POTENCIA Y TARIFA ($/kWh)
+INSERT INTO tbl_conector (tipo, potencia, tarifa, disponible)
+VALUES 
+(N'CCS Combo 2 Ultra', 50.0, 0.20, 1),
+(N'Type 2 Mennekes Standard', 22.0, 0.12, 1),
+(N'CHAdeMO Fast Charge', 100.0, 0.35, 1),
+(N'Tesla Supercharger V3', 150.0, 0.45, 1);
+GO
+
+-- 5. ASOCIACIÓN DE CONECTORES A ESTACIONES
+INSERT INTO estacion_conector (estacion_id, conector_id)
+SELECT e.estacion_id, c.conector_id
+FROM tbl_estacion e, tbl_conector c
+WHERE e.nombre = N'Estación Centro Guayaquil' AND c.tipo IN (N'CCS Combo 2 Ultra', N'Type 2 Mennekes Standard');
+
+INSERT INTO estacion_conector (estacion_id, conector_id)
+SELECT e.estacion_id, c.conector_id
+FROM tbl_estacion e, tbl_conector c
+WHERE e.nombre = N'Estación Samborondón' AND c.tipo IN (N'CHAdeMO Fast Charge', N'Tesla Supercharger V3');
+
+INSERT INTO estacion_conector (estacion_id, conector_id)
+SELECT e.estacion_id, c.conector_id
+FROM tbl_estacion e, tbl_conector c
+WHERE e.nombre = N'Estación Norte Quito' AND c.tipo = N'CCS Combo 2 Ultra';
+GO
+
+-- 6. CONSULTAS DE VERIFICACIÓN
+SELECT user_id, nombre, apellido, rol, email FROM tbl_usuario;
+SELECT estacion_id, nombre, estado FROM tbl_estacion;
+SELECT conector_id, tipo, potencia, tarifa, disponible FROM tbl_conector;
+SELECT * FROM estacion_conector;
+GO

@@ -69,6 +69,9 @@ public class JwtService {
                 .map(GrantedAuthority::getAuthority)
                 .toList();
         extraClaims.put("roles", roles);
+        if (userDetails instanceof com.example.sudamericanaprueba2.entity.Usuario usuario) {
+            extraClaims.put("userId", usuario.getUserId());
+        }
         return extraClaims;
     }
 

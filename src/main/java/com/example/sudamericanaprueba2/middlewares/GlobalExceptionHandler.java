@@ -29,11 +29,11 @@ public class GlobalExceptionHandler {
 
     // Este método atrapa tus throw new RuntimeException("mensaje")
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Map<String, String>> manejarEstudianteNoEncontrado(RuntimeException ex) {
+    public ResponseEntity<Map<String, String>> manejarRuntimeException(RuntimeException ex) {
         Map<String, String> respuesta = new HashMap<>();
         respuesta.put("error", ex.getMessage()); 
         
-        return new ResponseEntity<>(respuesta, HttpStatus.NOT_FOUND); 
+        return new ResponseEntity<>(respuesta, HttpStatus.BAD_REQUEST); 
     }
 
     // Atrapa bloqueos de Spring Security por falta de permisos (Roles)

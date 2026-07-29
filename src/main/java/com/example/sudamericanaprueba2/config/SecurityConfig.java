@@ -32,12 +32,23 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(org.springframework.security.config.Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/v1/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
                                 "/monitor/**", "/ws-notificaciones/**")
                         .permitAll()
+
+                        // Permisos de Administración (Creación, modificación y eliminación)
+                        .requestMatchers(HttpMethod.POST, "/api/v1/estacion", "/api/v1/estacion/**", "/api/v1/conector", "/api/v1/conector/**").hasAnyRole("ADMINISTRADOR", "OPERADOR")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/estacion", "/api/v1/estacion/**", "/api/v1/conector", "/api/v1/conector/**").hasAnyRole("ADMINISTRADOR", "OPERADOR")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/estacion", "/api/v1/estacion/**", "/api/v1/conector", "/api/v1/conector/**").hasRole("ADMINISTRADOR")
+
+                        // Permisos de Consulta y Sesiones (Administrador, Operador y Usuario)
+                        .requestMatchers("/api/v1/estacion", "/api/v1/estacion/**", "/api/v1/conector", "/api/v1/conector/**", "/api/v1/cotizador", "/api/v1/cotizador/**", "/api/v1/sesion", "/api/v1/sesion/**", "/api/v1/usuario", "/api/v1/usuario/**")
+                        .hasAnyRole("ADMINISTRADOR", "OPERADOR", "USUARIO")
+
                         .anyRequest().authenticated())
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(customAuthenticationEntryPoint)

@@ -1,6 +1,6 @@
 package com.example.sudamericanaprueba2.dto.Create;
 
-import com.example.sudamericanaprueba2.entity.Tarea.Estado;
+import org.springframework.data.geo.Point;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,14 +11,13 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor // me dio un error el swagger por falta de cosntructor en el dto y tuve que poenr esto 
+@NoArgsConstructor
 @AllArgsConstructor
-public class ActualizarEstadoTareaDTO {
-    @NotNull
-    private Long tareaId;
+public class EstacionCreateDTO {
 
-    @NotNull
-    private Estado estado;
+    @NotBlank(message = "El nombre de la estación es obligatorio")
+    private String nombre;
 
-
+    @NotNull(message = "La ubicación es obligatoria")
+    private Point ubicacion;
 }

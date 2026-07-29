@@ -1,6 +1,5 @@
 package com.example.sudamericanaprueba2.entity;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -12,7 +11,6 @@ import org.hibernate.annotations.SQLRestriction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -26,11 +24,11 @@ import lombok.ToString;
 
 @Builder
 @Data
-@AllArgsConstructor //no me corria swagger por eso las agregue
-@NoArgsConstructor  //no me corria swagger por eso las agregue
+@AllArgsConstructor // no me corria swagger por eso las agregue
+@NoArgsConstructor // no me corria swagger por eso las agregue
 @Entity
 @Table(name = "tbl_usuario")
-public class Usuario implements UserDetails{
+public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
@@ -42,11 +40,11 @@ public class Usuario implements UserDetails{
     private String apellido;
 
     @Column
-    @Enumerated(EnumType.STRING) 
+    @Enumerated(EnumType.STRING)
     private Rol rol;
 
     public enum Rol {
-        ADMINISTRADOR, PROGRAMADOR
+        ADMINISTRADOR, USUARIO, OPERADOR
     }
 
     @Column(name = "email", nullable = false, unique = true)
@@ -56,7 +54,6 @@ public class Usuario implements UserDetails{
     @Column(nullable = false)
     private String password;
 
-    
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -93,16 +90,6 @@ public class Usuario implements UserDetails{
         return true;
     }
 
-    @ToString.Exclude // Bloquea el bucle del toString()
-    @EqualsAndHashCode.Exclude // Bloquea problemas de memoria al comparar
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private List<Voto> votos = new ArrayList<>();
 
-    @ToString.Exclude // Bloquea el bucle del toString()
-    @EqualsAndHashCode.Exclude // Bloquea problemas de memoria al comparar
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private List<Comentario> comentarios = new ArrayList<>();
 
 }
